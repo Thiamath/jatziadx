@@ -18,8 +18,8 @@ class TestCommand : Command(Action.TEST) {
 
 class ParseCommand(
         val filename: String,
-        val initDatetime: Long,
-        val endDatetime: Long,
+        val initDatetime: String,
+        val endDatetime: String,
         val hostname: String
 ) : Command(Action.PARSE) {
     override fun execute() {
