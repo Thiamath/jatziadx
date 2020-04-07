@@ -10,6 +10,6 @@ interface Test {
 
 object FollowTest : Test {
     override fun launchTest() {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
     }
 }

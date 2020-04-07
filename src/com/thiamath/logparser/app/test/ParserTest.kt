@@ -24,6 +24,7 @@ object ParserTest : Test {
 
         object ParserHandlerImplHappyPathTest : Test {
             override fun launchTest() {
+                println("The parser must comply with a happy path execution.")
                 // Given the parser handler and stubbed manager
                 val parseManager = object : ParseManager {
                     override fun parseFile(filename: String, initDatetime: Long, endDatetime: Long, hostname: String): ParseResult {
@@ -42,6 +43,7 @@ object ParserTest : Test {
 
         object ParserHandlerImplValidationTest : Test {
             override fun launchTest() {
+                println("The parser must validate the input dates.")
                 // Given the parser handler and stubbed manager
                 val parseManager = object : ParseManager {
                     override fun parseFile(filename: String, initDatetime: Long, endDatetime: Long, hostname: String): ParseResult {
@@ -60,15 +62,16 @@ object ParserTest : Test {
     object ParseManagerImplTest : Test {
         override fun launchTest() {
             arrayListOf(ParseManagerImplHappyPathTest, ParseManagerImplBarelySortedTest)
+                    .forEach { it.launchTest() }
         }
 
         object ParseManagerImplHappyPathTest : Test {
             override fun launchTest() {
-                println("The parser must distinguish hostnames that are not perfectly sorted")
+                println("The parser must get the hostnames connected.")
                 // Given the ParseManager
                 val parseManager = ParseManagerImpl()
-                // When
-                val parseResult = parseManager.parseFile("$TEST_RESOURCES_PATH/ParseManagerImplHappyPathTest.txt", 1586166221000, 1586166321000, "Perry")
+                // When                                                                                            1586166220000  1586166220000
+                val parseResult = parseManager.parseFile("$TEST_RESOURCES_PATH/ParseManagerImplHappyPathTest.txt", 1586166210000, 1586166321000, "Perry")
                 // Then
                 assertEquals(ParseResult(
                         listOf("Peter")
@@ -78,15 +81,14 @@ object ParserTest : Test {
 
         object ParseManagerImplBarelySortedTest : Test {
             override fun launchTest() {
-                println("The parser must distinguish hostnames that are not perfectly sorted")
+                println("The parser must distinguish hostnames that are not perfectly sorted.")
                 // Given the ParseManager
                 val parseManager = ParseManagerImpl()
                 // When asking for the list of hostnames between 9:35:00 and 9:40:00 that connected to Perry
-                val parseResult = parseManager.parseFile("$TEST_RESOURCES_PATH/ParseManagerImplBarelySortedTest.txt", 1586166221000, 1586166321000, "Perry")
+                val parseResult = parseManager.parseFile("$TEST_RESOURCES_PATH/ParseManagerImplBarelySortedTest.txt", 1586165700000, 1586166000000, "Perry")
                 // Then
-                assertEquals(ParseResult(
-                        listOf("Aleksandra", "Ronin", "Kainani", "Glorian")
-                ), parseResult, "The result must be equal to the expected")
+                assertEquals(listOf("Aleksandra", "Glorian", "Kainani", "Ronin"),
+                        parseResult.hostnameList.sorted(), "The result must be equal to the expected")
             }
         }
     }
