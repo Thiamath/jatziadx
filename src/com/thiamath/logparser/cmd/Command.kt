@@ -1,5 +1,8 @@
 package com.thiamath.logparser.cmd
 
+import com.thiamath.logparser.app.test.Test
+import com.thiamath.logparser.app.test.testSuite
+
 sealed class Command(
         val action: Action
 ) {
@@ -11,9 +14,9 @@ sealed class Command(
 }
 
 class TestCommand : Command(Action.TEST) {
-    override fun execute() {
-        TODO("Not yet implemented")
-    }
+    override fun execute() = testSuite()
+            .parallelStream()
+            .forEach(Test::launchTest)
 }
 
 class ParseCommand(
