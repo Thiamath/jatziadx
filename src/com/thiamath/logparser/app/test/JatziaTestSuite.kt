@@ -7,9 +7,3 @@ fun testSuite() = arrayListOf(
 interface Test {
     fun launchTest()
 }
-
-object FollowTest : Test {
-    override fun launchTest() {
-        //TODO("Not yet implemented")
-    }
-}

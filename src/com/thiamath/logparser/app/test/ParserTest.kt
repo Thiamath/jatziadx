@@ -70,7 +70,7 @@ object ParserTest : Test {
                 println("The parser must get the hostnames connected.")
                 // Given the ParseManager
                 val parseManager = ParseManagerImpl()
-                // When                                                                                            1586166220000  1586166220000
+                // When
                 val parseResult = parseManager.parseFile("$TEST_RESOURCES_PATH/ParseManagerImplHappyPathTest.txt", 1586166210000, 1586166321000, "Perry")
                 // Then
                 assertEquals(ParseResult(

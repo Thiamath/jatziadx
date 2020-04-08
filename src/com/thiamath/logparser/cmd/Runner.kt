@@ -18,7 +18,10 @@ private fun commandFactory(args: Array<String>): Command =
                     endDatetime = args[3],
                     hostname = args[4]
             )
-            args.size == 2 && args[0] == Command.Action.FOLLOW.command -> FollowCommand(filename = args[1])
+            args.size == 2 && args[0] == Command.Action.FOLLOW.command -> FollowCommand(
+                    filename = args[1],
+                    hostname = args[2]
+            )
             else -> throw IllegalArgumentException()
         }
 

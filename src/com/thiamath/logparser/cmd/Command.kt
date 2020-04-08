@@ -37,7 +37,8 @@ class ParseCommand(
 }
 
 class FollowCommand(
-        val filename: String
+        val filename: String,
+        val hostname: String
 ) : Command(Action.FOLLOW) {
     override fun execute() {
         TODO("Not yet implemented")
