@@ -1,5 +1,6 @@
 package com.thiamath.logparser.app.parse
 
+import com.thiamath.logparser.app.model.LogLine
 import com.thiamath.logparser.app.model.ParseResult
 import java.io.File
 
@@ -11,15 +12,12 @@ class ParseManagerImpl : ParseManager {
         var linesRead = 0
         File(filename).bufferedReader()
                 .lineSequence()
-                .takeWhile { it.split(" ")[0].toLong() < endDatetime + TIMESTAMP_SORTING_CONFIDENCE_MS }
-                .forEach { line ->
+                .map { LogLine.fromString(it) }
+                .takeWhile { it.timestamp < endDatetime + TIMESTAMP_SORTING_CONFIDENCE_MS }
+                .forEach { logLine ->
                     linesRead++
-                    val split = line.split(" ")
-                    val timestamp = split[0].toLong()
-                    val fromHost = split[1]
-                    val toHost = split[2]
-                    if (timestamp in initDatetime..endDatetime && toHost == hostname) {
-                        setResult.add(fromHost)
+                    if (logLine.timestamp in initDatetime..endDatetime && logLine.receiverHostname == hostname) {
+                        setResult.add(logLine.senderHostname)
                     }
                 }
         println("Lines read -> $linesRead")
