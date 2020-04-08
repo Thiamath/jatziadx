@@ -1,10 +1,13 @@
 package com.thiamath.logparser.cmd
 
+import com.thiamath.logparser.app.follow.followHandler
+import com.thiamath.logparser.app.model.FollowResult
 import com.thiamath.logparser.app.parse.parseHandler
 import com.thiamath.logparser.app.test.Test
 import com.thiamath.logparser.app.test.testSuite
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.concurrent.LinkedBlockingQueue
 
 sealed class Command(
         val action: Action
@@ -41,6 +44,20 @@ class FollowCommand(
         val hostname: String
 ) : Command(Action.FOLLOW) {
     override fun execute() {
-        TODO("Not yet implemented")
+        val queue = LinkedBlockingQueue<FollowResult>()
+        followHandler(queue).followParseFile(filename, hostname)
+        var lastWrite: LocalDateTime? = null
+        while (true) {
+            val followResult = queue.take()
+            if (lastWrite == null) {
+                println("On the file so far:")
+            } else {
+                println("Between $lastWrite and ${LocalDateTime.now()}:")
+            }
+            println("Hostnames connected to $hostname: ${followResult.toHostnameList}")
+            println("Hostnames connected from $hostname: ${followResult.fromHostnameList}")
+            println("Hostname most active: ${followResult.mostActiveHostname}")
+            lastWrite = LocalDateTime.now()
+        }
     }
 }
